@@ -433,7 +433,7 @@ node bin/index.js examples/structure.txt --dry-run
 
 MIT © [Naseem Ansari](https://github.com/Gitnaseem745)
 
-See [LICENSE](LICENSE) file for details.
+See [LICENSE](https://github.com/Gitnaseem745/mkstruct?tab=License-1-ov-file) file for details.
 
 ---
 
@@ -448,12 +448,6 @@ If mkstruct helped you save time, please give it a ⭐️ on [GitHub](https://gi
 - **GitHub**: [@Gitnaseem745](https://github.com/Gitnaseem745)
 - **NPM**: [mkstruct](https://www.npmjs.com/package/mkstruct)
 - **Issues**: [Report a bug](https://github.com/Gitnaseem745/mkstruct/issues)
-
----
-
-## 🎓 Learn More
-
-Check out the [Terminal Commands Guide](TERMINAL_COMMANDS_GUIDE.md) to master command-line operations!
 
 ---
 
