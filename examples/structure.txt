@@ -1,0 +1,4 @@
+index.js
+public/css/style.css
+public/js/script.js
+views/index.html
