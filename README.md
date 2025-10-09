@@ -25,13 +25,16 @@ Or use directly via npx (no install):
 ```bash
 npx mkstruct structure.txt
 ```
+---
 
 ## 🧠 Usage
 ### 1️⃣ Flat structure
 
 ```txt
-🧠 Usage
-1️⃣ Flat structure
+index.js
+public/css/style.css
+public/js/script.js
+views/index.html
 ```
 
 Run:
