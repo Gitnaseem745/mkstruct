@@ -1,6 +1,6 @@
 {
   "name": "mkstruct",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "🚀 Instantly generate nested folder & file structures from flat or ASCII tree text files. Ideal for scaffolding projects in seconds.",
   "bin": {
     "mkstruct": "./bin/index.js"
