@@ -1,8 +1,169 @@
-├── index.js
+├── .github
+│   ├── workflows
+│   │   ├── ci.yml
+│   │   └── deploy.yml
+│   └── ISSUE_TEMPLATE
+│       ├── bug_report.md
+│       └── feature_request.md
+├── src
+│   ├── index.js
+│   ├── config
+│   │   ├── database.js
+│   │   ├── environment.js
+│   │   └── constants.js
+│   ├── controllers
+│   │   ├── authController.js
+│   │   ├── userController.js
+│   │   ├── productController.js
+│   │   └── orderController.js
+│   ├── models
+│   │   ├── User.js
+│   │   ├── Product.js
+│   │   ├── Order.js
+│   │   └── Category.js
+│   ├── routes
+│   │   ├── index.js
+│   │   ├── api
+│   │   │   ├── auth.js
+│   │   │   ├── users.js
+│   │   │   ├── products.js
+│   │   │   └── orders.js
+│   │   └── web
+│   │       ├── home.js
+│   │       └── dashboard.js
+│   ├── middleware
+│   │   ├── auth.js
+│   │   ├── errorHandler.js
+│   │   ├── validation.js
+│   │   ├── rateLimit.js
+│   │   └── logger.js
+│   ├── services
+│   │   ├── emailService.js
+│   │   ├── paymentService.js
+│   │   ├── storageService.js
+│   │   └── cacheService.js
+│   ├── utils
+│   │   ├── helpers.js
+│   │   ├── validators.js
+│   │   ├── formatters.js
+│   │   └── logger.js
+│   └── database
+│       ├── migrations
+│       │   ├── 001_create_users_table.js
+│       │   ├── 002_create_products_table.js
+│       │   └── 003_create_orders_table.js
+│       └── seeders
+│           ├── users.js
+│           ├── products.js
+│           └── categories.js
 ├── public
+│   ├── index.html
 │   ├── css
-│   │   └── style.css
-│   └── js
-│       └── script.js
-└── views
-    └── index.html
+│   │   ├── main.css
+│   │   ├── normalize.css
+│   │   ├── components
+│   │   │   ├── navbar.css
+│   │   │   ├── footer.css
+│   │   │   ├── buttons.css
+│   │   │   └── cards.css
+│   │   └── pages
+│   │       ├── home.css
+│   │       ├── about.css
+│   │       └── contact.css
+│   ├── js
+│   │   ├── main.js
+│   │   ├── app.js
+│   │   ├── utils
+│   │   │   ├── api.js
+│   │   │   ├── storage.js
+│   │   │   └── helpers.js
+│   │   └── components
+│   │       ├── modal.js
+│   │       ├── dropdown.js
+│   │       └── carousel.js
+│   ├── images
+│   │   ├── logo.png
+│   │   ├── logo.svg
+│   │   ├── favicon.ico
+│   │   ├── hero
+│   │   │   ├── banner.jpg
+│   │   │   └── background.jpg
+│   │   └── icons
+│   │       ├── user.svg
+│   │       ├── cart.svg
+│   │       └── search.svg
+│   ├── fonts
+│   │   ├── Roboto-Regular.ttf
+│   │   ├── Roboto-Bold.ttf
+│   │   └── OpenSans-Regular.ttf
+│   └── assets
+│       ├── videos
+│       │   └── intro.mp4
+│       └── documents
+│           └── terms.pdf
+├── tests
+│   ├── unit
+│   │   ├── controllers
+│   │   │   ├── authController.test.js
+│   │   │   ├── userController.test.js
+│   │   │   └── productController.test.js
+│   │   ├── models
+│   │   │   ├── User.test.js
+│   │   │   └── Product.test.js
+│   │   ├── services
+│   │   │   ├── emailService.test.js
+│   │   │   └── paymentService.test.js
+│   │   └── utils
+│   │       ├── helpers.test.js
+│   │       └── validators.test.js
+│   ├── integration
+│   │   ├── api
+│   │   │   ├── auth.test.js
+│   │   │   ├── users.test.js
+│   │   │   └── products.test.js
+│   │   └── database
+│   │       └── connection.test.js
+│   ├── e2e
+│   │   ├── userFlow.test.js
+│   │   ├── checkout.test.js
+│   │   └── admin.test.js
+│   ├── fixtures
+│   │   ├── users.json
+│   │   ├── products.json
+│   │   └── orders.json
+│   └── __mocks__
+│       ├── axios.js
+│       └── database.js
+├── docs
+│   ├── README.md
+│   ├── getting-started.md
+│   ├── api
+│   │   ├── authentication.md
+│   │   ├── endpoints.md
+│   │   └── errors.md
+│   ├── guides
+│   │   ├── installation.md
+│   │   ├── configuration.md
+│   │   ├── deployment.md
+│   │   └── testing.md
+│   └── examples
+│       ├── basic-usage.md
+│       ├── advanced-usage.md
+│       └── code-samples.js
+├── scripts
+│   ├── build.sh
+│   ├── deploy.sh
+│   ├── test.sh
+│   ├── seed-database.js
+│   └── cleanup.js
+├── .gitignore
+├── .env.example
+├── .eslintrc.json
+├── .prettierrc.json
+├── package.json
+├── package-lock.json
+├── README.md
+├── LICENSE
+├── CONTRIBUTING.md
+├── CHANGELOG.md
+└── docker-compose.yml
