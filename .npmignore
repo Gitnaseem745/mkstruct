@@ -1,0 +1,28 @@
+# Test files
+test/
+*.test.js
+TEST_RESULTS.md
+
+# Development files
+.git/
+.github/
+.vscode/
+.idea/
+
+# Documentation (keep only essentials)
+RELEASE_NOTES.md
+
+# System files
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.swo
+*~
+
+# Dependencies
+node_modules/
+
+# Build artifacts
+coverage/
+.nyc_output/

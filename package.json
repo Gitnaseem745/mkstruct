@@ -1,11 +1,33 @@
 {
   "name": "mkstruct",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "description": "🚀 Instantly generate nested folder & file structures from flat or ASCII tree text files. Ideal for scaffolding projects in seconds.",
   "bin": {
     "mkstruct": "./bin/index.js"
   },
   "type": "module",
+  "main": "./src/normalizer.js",
+  "exports": {
+    ".": "./src/normalizer.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "node test/normalizer.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gitnaseem745/mkstruct.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Gitnaseem745/mkstruct/issues"
+  },
+  "homepage": "https://github.com/Gitnaseem745/mkstruct#readme",
   "author": "Naseem Ansari",
   "license": "MIT",
   "keywords": [
@@ -14,8 +36,15 @@
     "file-structure",
     "developer-tools",
     "automation",
-    "project-generator"
+    "project-generator",
+    "tree-parser",
+    "mkdir",
+    "filesystem",
+    "boilerplate"
   ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "dependencies": {
     "chalk": "^5.3.0",
     "commander": "^11.0.0"

@@ -4,6 +4,7 @@ import fsSync from "fs";
 import path from "path";
 import { program } from "commander";
 import chalk from "chalk";
+import { normalizeTree, hasTreeStructure } from "../src/normalizer.js";
 
 program
     .name("mkstruct")
@@ -11,70 +12,94 @@ program
     .argument("[file]", "structure file (omit to read from stdin)")
     .option("-d, --dry-run", "show actions without creating files")
     .option("-f, --force", "overwrite existing files")
-    .option("-s, --stdin", "read structure from stdin")
+    .option("-s, --structure <text>", "directly provide structure as string")
+    .option("--stdin", "read structure from stdin")
     .option("-v, --verbose", "verbose logging")
     .parse();
 
 const opts = program.opts();
 
-/* -------------------- Read Input -------------------- */
 async function readInput(argFile) {
+    if (opts.structure) return opts.structure;
+
     if (opts.stdin) {
-        const stdin = await new Promise((res) => {
+        return new Promise((res) => {
             let data = "";
             process.stdin.setEncoding("utf8");
             process.stdin.on("data", (chunk) => (data += chunk));
             process.stdin.on("end", () => res(data));
         });
-        return stdin;
     }
+
     if (!argFile) {
-        throw new Error("No input file provided. Use --stdin or provide a filename.");
+        throw new Error("No input provided. Use -s <structure>, --stdin, or provide a filename.");
     }
     return fs.readFile(argFile, "utf8");
 }
 
-/* -------------------- Detect Format -------------------- */
 function isTreeFormat(lines) {
-    return lines.some((l) => /[├└]──/.test(l));
+    return hasTreeStructure(lines.join('\n'));
 }
 
-/* -------------------- Parse Flat Format -------------------- */
 function parseFlatStructure(lines) {
     return lines.map((l) => l.trim()).filter(Boolean);
 }
 
-/* -------------------- Parse Tree Format -------------------- */
 function parseTreeStructure(lines) {
+    const input = lines.join('\n');
+    const normalizedInput = normalizeTree(input);
+    const normalizedLines = normalizedInput.split(/\r?\n/);
+
+    if (opts.verbose && input !== normalizedInput) {
+        console.log(chalk.blue('ℹ️  Tree structure normalized'));
+    }
+
     const stack = [];
     const result = [];
+    let hasRoot = false;
 
-    for (let raw of lines) {
+    for (let raw of normalizedLines) {
         const line = raw.replace(/\t/g, "    ");
         if (!line.trim()) continue;
 
-        // Match tree characters and extract the name
-        const m = line.match(/^(.*?)([├└]──\s*)(.+)$/);
+        const rootMatch = line.match(/^([^\s├└│]+)$/);
+        if (rootMatch) {
+            const name = rootMatch[1].trim();
+            stack[0] = name;
+            stack.length = 1;
+            result.push(name);
+            hasRoot = true;
+            continue;
+        }
+
+        const m = line.match(/^(.*?)(├──|└──)\s*(.+)$/);
         if (!m) continue;
 
         const prefix = m[1];
         const name = m[3].trim();
 
-        // Calculate depth by counting visible tree characters in the prefix
-        // Count │ and spaces - each indentation level adds 4 characters (│   )
-        const depth = Math.floor(prefix.length / 4);
+        let depth = 0;
+        let i = 0;
+        while (i < prefix.length) {
+            if (prefix[i] === '│') {
+                depth++;
+                i += 4;
+            } else {
+                i++;
+            }
+        }
+
+        if (hasRoot) depth += 1;
 
         stack[depth] = name;
         stack.length = depth + 1;
 
-        const fullPath = stack.join(path.sep);
-        result.push(fullPath);
+        result.push(stack.join(path.sep));
     }
 
     return result;
 }
 
-/* -------------------- Helpers -------------------- */
 async function ensureDir(targetPath, dry = false) {
     if (!fsSync.existsSync(targetPath)) {
         if (dry) {
@@ -92,12 +117,11 @@ async function createFile(fullPath, { dryRun, force }) {
         throw new Error(`Refusing to write outside CWD: ${fullPath}`);
     }
 
-    const dir = path.dirname(fullPath);
-    await ensureDir(dir, dryRun);
+    await ensureDir(path.dirname(fullPath), dryRun);
 
     const exists = fsSync.existsSync(fullPath);
     if (exists && !force) {
-        console.log(chalk.yellow(`⚠️ Skipped (exists): ${rel}`));
+        console.log(chalk.yellow(`⚠️  Skipped (exists): ${rel}`));
         return;
     }
 
@@ -110,7 +134,13 @@ async function createFile(fullPath, { dryRun, force }) {
     console.log(chalk.green(`✅ Created file: ${rel}`));
 }
 
-/* -------------------- Main -------------------- */
+const COMMON_FILES = [
+    'Makefile', 'Dockerfile', 'Rakefile', 'Gemfile', 'Procfile',
+    'LICENSE', 'README', 'CHANGELOG', 'CONTRIBUTING',
+    '.gitignore', '.dockerignore', '.npmignore', '.gitattributes',
+    '.editorconfig', '.env', '.env.example', '.env.local'
+];
+
 (async () => {
     try {
         const argFile = program.args[0];
@@ -121,16 +151,20 @@ async function createFile(fullPath, { dryRun, force }) {
             ? parseTreeStructure(lines)
             : parseFlatStructure(lines);
 
-        // Sort by depth so folders are created before their children
         const sortedPaths = rawPaths.sort(
             (a, b) => a.split(path.sep).length - b.split(path.sep).length
         );
 
         for (const p of sortedPaths) {
             const fullPath = path.resolve(process.cwd(), p);
+            const endsWithSlash = p.endsWith('/') || p.endsWith(path.sep);
+            const hasExtension = path.extname(p) !== "";
+            const basename = path.basename(p);
+            const isCommonFile = COMMON_FILES.some(f =>
+                basename === f || basename.toLowerCase() === f.toLowerCase()
+            );
 
-            // Detect if it's a file or folder
-            const isFile = path.extname(fullPath) !== "";
+            const isFile = !endsWithSlash && (hasExtension || isCommonFile);
 
             if (isFile) {
                 await createFile(fullPath, { dryRun: opts.dryRun, force: opts.force });
